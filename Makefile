@@ -33,7 +33,7 @@ else
 	-f docker-compose.hostports.yml
 endif
 
-.PHONY: all dockerfile docker-compose test test-build lint clean pristine run run-single run-cluster build release-manager release-manager-snapshot push
+.PHONY: all dockerfile docker-compose es-docker test test-build lint clean pristine run run-single run-cluster build release-manager release-manager-snapshot push
 
 # Default target, build *and* run tests
 all: build test
@@ -147,7 +147,7 @@ venv: requirements.txt
 	touch venv;\
 
 # Generate the Dockerfiles for each image flavor from a Jinja2 template.
-dockerfile: venv templates/Dockerfile.j2
+dockerfile: venv templates/Dockerfile.j2 es-docker
 	$(foreach FLAVOR, $(IMAGE_FLAVORS), \
 	 jinja2 \
 	   -D elastic_version='$(ELASTIC_VERSION)' \
@@ -167,4 +167,11 @@ docker-compose: venv templates/docker-compose.yml.j2 templates/docker-compose-fr
 	 jinja2 \
 	  -D image_flavor='$(FLAVOR)' \
 	  templates/docker-compose-fragment.yml.j2 > tests/docker-compose-$(FLAVOR).yml; \
+	)
+
+es-docker: templates/es-docker.j2
+	$(foreach FLAVOR, $(IMAGE_FLAVORS), \
+	 jinja2 \
+	  -D image_flavor='$(FLAVOR)' \
+	  templates/es-docker.j2 > build/elasticsearch/bin/es-docker-$(FLAVOR); \
 	)
