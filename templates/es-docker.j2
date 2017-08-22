@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script was generated from the template at templates/es-docker.j2
+#
 # Run Elasticsearch and allow setting default settings via env vars
 #
 # e.g. Setting the env var cluster.name=testcluster
@@ -35,6 +37,7 @@ done < <(env)
 # will run in.
 export ES_JAVA_OPTS="-Des.cgroups.hierarchy.override=/ $ES_JAVA_OPTS"
 
+{% if image_flavor == 'platinum' -%}
 # Determine if x-pack is enabled
 if bin/elasticsearch-plugin list -s | grep x-pack; then
     # Setting ELASTIC_PASSWORD is mandatory on the *first* node (unless
@@ -58,5 +61,6 @@ if bin/elasticsearch-plugin list -s | grep x-pack; then
                  )
     fi
 fi
+{% endif -%}
 
 exec bin/elasticsearch "${es_opts[@]}"

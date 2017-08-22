@@ -73,7 +73,7 @@ USER root
 
 {% if image_flavor == 'oss' -%}
 COPY elasticsearch.yml log4j2.properties config/
-COPY bin/es-docker bin/es-docker
+COPY bin/es-docker-{{ image_flavor }} bin/es-docker
 
 RUN chown elasticsearch:elasticsearch \
       config/elasticsearch.yml \
@@ -83,7 +83,7 @@ RUN chown elasticsearch:elasticsearch \
 {% elif image_flavor == 'basic' -%}
 COPY elasticsearch.yml log4j2.properties config/
 COPY x-pack/log4j2.properties config/x-pack/
-COPY bin/es-docker bin/es-docker
+COPY bin/es-docker-{{ image_flavor }} bin/es-docker
 
 # Note: basic will be available after 6.0.0-beta1
 RUN echo 'xpack.license.self_generated.type: basic' >>config/elasticsearch.yml
@@ -97,7 +97,7 @@ RUN chown elasticsearch:elasticsearch \
 {% elif image_flavor == 'platinum' -%}
 COPY elasticsearch.yml certgen_instances.yml log4j2.properties config/
 COPY x-pack/log4j2.properties config/x-pack/
-COPY bin/es-docker bin/es-docker
+COPY bin/es-docker-{{ image_flavor }} bin/es-docker
 
 RUN echo 'xpack.license.self_generated.type: trial' >>config/elasticsearch.yml
 

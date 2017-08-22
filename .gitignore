@@ -7,4 +7,5 @@
 build/elasticsearch/Dockerfile
 build/elasticsearch/Dockerfile-*
 build/elasticsearch/elasticsearch*.tar.gz
+build/elasticsearch/bin/es-docker-*
 tests/docker-compose*.yml
